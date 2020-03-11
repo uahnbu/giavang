@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giá vàng</title>
+<style>body, html { margin: 0 }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="priceData.js"></script>
+</head>
+<body>
+<script>
+const canvas = document.createElement('canvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+document.body.appendChild(canvas);
+
+const chart = new Chart(canvas, {
+  type: 'line',
+  data: {
+    datasets: [
+      {
+        label: 'Mua vào',
+        backgroundColor: 'rgba(41, 128, 185, 0.2)',
+        borderColor: 'rgb(41, 128, 185)'
+      },
+      {
+        label: 'Bán ra',
+        backgroundColor: 'rgba(142, 68, 173, 0.2)',
+        borderColor: 'rgb(142, 68, 173)'
+      }
+    ]
+  },
+  options: {
+    responsive: false,
+    title: { display: true, text: 'Lịch sử giá vàng' },
+    scales: {
+      xAxes: [{
+        scaleLabel: { display: true, labelString: 'Ngày' }
+      }],
+      yAxes: [{
+        scaleLabel: { display: true, labelString: 'Giá' },
+        ticks: { callback: value => value + ',000' }
+      }]
+    },
+    elements: {
+      point: { radius: 1 }
+    }
+  }
+});
+
+for (let { date, buy, sell } of priceData) {
+  chart.data.labels.push(date);
+  chart.data.datasets[0].data.push(buy);
+  chart.data.datasets[1].data.push(sell);
+}
+
+chart.update();
+</script>
+</body>
+</html>
